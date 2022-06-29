@@ -1,0 +1,80 @@
+apiVersion: charts.netwarps.com/v1alpha1
+kind: Geth
+metadata:
+  name: geth-sample
+spec:
+  # Default values copied from <project_dir>/helm-charts/geth/values.yaml
+  affinity: {}
+  autoscaling:
+    enabled: false
+    maxReplicas: 100
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+  cluster: jyliu
+  config: |
+    [Eth]
+    NetworkId = 1
+  container:
+    ports:
+      discovery: 30303
+      http: 8545
+      listener: 30303
+      prometheus: 6060
+      ws: 8546
+  env: {}
+  fullnameOverride: ""
+  genesis: ""
+  image:
+    args:
+    - --config
+    - /root/config/config.custom.toml
+    command:
+    - geth
+    pullPolicy: IfNotPresent
+    repository: ethereum/client-go
+    tag: v1.10.17
+  imagePullSecrets: []
+  initContainer:
+    args:
+    - init
+    - /root/config/genesis.custom.json
+    command:
+    - geth
+  key: ""
+  nameOverride: ""
+  nodeSelector:
+    geth/role: node
+  password: ""
+  persistence:
+    accessModes:
+    - ReadWriteOnce
+    annotations: {}
+    enabled: true
+    size: 20Gi
+  podAnnotations: {}
+  podSecurityContext: {}
+  prometheus: false
+  replicaCount: 1
+  resources: {}
+  securityContext: {}
+  service:
+    http: 8545
+    prometheus: 6060
+    type: ClusterIP
+    ws: 8546
+  serviceAccount:
+    annotations: {}
+    create: false
+    name: ""
+  serviceP2P:
+    discovery: 30303
+    listener: 30303
+    type: NodePort
+  tolerations: []
+  volumes:
+    config:
+      mountPath: /root/config
+    data:
+      mountPath: /root/.ethereum
+  
+  

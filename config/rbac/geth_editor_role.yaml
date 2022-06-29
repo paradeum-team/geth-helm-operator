@@ -1,0 +1,24 @@
+# permissions for end users to edit geths.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: geth-editor-role
+rules:
+- apiGroups:
+  - charts.netwarps.com
+  resources:
+  - geths
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - charts.netwarps.com
+  resources:
+  - geths/status
+  verbs:
+  - get

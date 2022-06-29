@@ -1,0 +1,6 @@
+# Use the 'create api' subcommand to add watches to this file.
+- group: charts.netwarps.com
+  version: v1alpha1
+  kind: Geth
+  chart: helm-charts/geth
+#+kubebuilder:scaffold:watch
