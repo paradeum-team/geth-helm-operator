@@ -16,6 +16,24 @@ initContainer:
   command: ["geth"]
   args: ["init", "/root/config/genesis.custom.json"]
 
+import:
+  ossutil:
+    enabled: false
+    image:
+      repository: quay.io/ss75710541/ossutil
+      tag: "v1.7.13-1"
+    pullPolicy: IfNotPresent
+    bucket: "geth-backup"
+    bakHost: "node1-geth-signer.pldprod.k8s"
+    # example: 202206
+    subPath: ""
+    config: |
+      [Credentials]
+      language=CH
+      endpoint=""
+      accessKeyID=""
+      accessKeySecret=""
+
 imagePullSecrets: []
 nameOverride: ""
 cluster: jyliu

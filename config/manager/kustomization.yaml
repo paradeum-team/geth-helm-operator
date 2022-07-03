@@ -13,4 +13,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: registry.hisun.netwarps.com/geth/geth-helm-operator
-  newTag: v0.0.3
+  newTag: v0.0.13

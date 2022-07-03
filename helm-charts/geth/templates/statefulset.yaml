@@ -46,6 +46,57 @@ spec:
               mountPath: {{ .Values.volumes.data.mountPath }}
             - name: config
               mountPath: {{ .Values.volumes.config.mountPath }}
+        {{ if .Values.import.ossutil.enabled }}
+        - name: {{ .Chart.Name }}-download
+          image: "{{ .Values.import.ossutil.image.repository }}:{{ .Values.import.ossutil.image.tag }}"
+          imagePullPolicy: {{ .Values.import.ossutil.image.pullPolicy }}
+          command:
+          - /bin/sh
+          - -c
+          - |
+            mouth=`date "+%Y%m"`
+            {{- if .Values.import.ossutil.subPath }}
+            subPath={{ .Values.import.ossutil.subPath }}
+            {{- else }}
+            subPath=$mouth
+            {{- end }}
+            mkdir -p {{ .Values.volumes.data.mountPath }}/backup
+            ossutil -c /data/ossutilconfig/.ossutilconfig cp -r oss://{{ .Values.import.ossutil.bucket }}/{{ .Values.import.ossutil.bakHost }}/$subPath/ {{ .Values.volumes.data.mountPath }}/backup/
+          volumeMounts:
+            - name: data
+              mountPath: {{ .Values.volumes.data.mountPath }}
+            - mountPath: /data/ossutilconfig
+              name: ossutil-config
+              readOnly: true
+        - name: {{ .Chart.Name }}-import
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+          - /bin/sh
+          - -c
+          - |
+            #!/bin/bash
+            # Author: liujinye
+            set -e
+            cd {{ .Values.volumes.data.mountPath }}/backup 
+
+            if [ -f "import.log" ];then
+                latest=`ls *.gz|tail -1`
+                grep "$latest" import.log && echo "The import is complete." && exit 0
+            fi
+            
+            for item in `ls *.gz`
+            do
+                grep "$item" import.log && echo "The $item is imported." && continue
+                name=`tar xzvf $item`
+                geth import $name
+                rm -f $name
+                echo "$item is done." >> import.log
+            done
+          volumeMounts:
+            - name: data
+              mountPath: {{ .Values.volumes.data.mountPath }}
+        {{- end}}
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
@@ -135,6 +186,11 @@ spec:
         - name: password
           secret:
             secretName: {{ include "geth.fullname" . }}-password
+        {{- end }}
+        {{ if .Values.import.ossutil.enabled }}
+        - name: ossutil-config
+          secret:
+            secretName: {{ include "geth.fullname" . }}-ossutilconfig
         {{- end }}
 {{- if and .Values.persistence.enabled .Values.persistence.existingClaim }}
         - name: data

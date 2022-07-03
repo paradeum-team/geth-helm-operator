@@ -11,6 +11,20 @@ spec:
     minReplicas: 1
     targetCPUUtilizationPercentage: 80
   cluster: jyliu
+  import:
+    ossutil:
+      enabled: false
+      image: quay.io/ss75710541/ossutil
+      pullPolicy: IfNotPresent
+      tag: "v1.7.13-1"
+      bucket: "geth-backup"
+      subPath: ""
+      config: |
+        [Credentials]
+        language=CH
+        endpoint=""
+        accessKeyID=""
+        accessKeySecret=""
   config: |
     [Eth]
     NetworkId = 1
