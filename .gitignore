@@ -12,3 +12,6 @@ bin
 *.swp
 *.swo
 *~
+
+# ios
+.DS_Store

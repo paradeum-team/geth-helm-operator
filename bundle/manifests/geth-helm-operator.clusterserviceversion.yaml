@@ -116,7 +116,7 @@ metadata:
     capabilities: Basic Install
     operators.operatorframework.io/builder: operator-sdk-v1.22.0
     operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
-  name: geth-helm-operator.v0.0.13
+  name: geth-helm-operator.v0.0.19
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -235,7 +235,7 @@ spec:
                 - --metrics-bind-address=127.0.0.1:8080
                 - --leader-elect
                 - --leader-election-id=geth-helm-operator
-                image: registry.hisun.netwarps.com/geth/geth-helm-operator:v0.0.13
+                image: registry.hisun.netwarps.com/geth/geth-helm-operator:v0.0.19
                 livenessProbe:
                   httpGet:
                     path: /healthz
@@ -251,11 +251,11 @@ spec:
                   periodSeconds: 10
                 resources:
                   limits:
-                    cpu: 500m
-                    memory: 256Mi
+                    cpu: "1"
+                    memory: 512Mi
                   requests:
                     cpu: 10m
-                    memory: 128Mi
+                    memory: 256Mi
                 securityContext:
                   allowPrivilegeEscalation: false
               securityContext:
@@ -316,4 +316,4 @@ spec:
   maturity: alpha
   provider:
     name: liujinye
-  version: 0.0.13
+  version: 0.0.19

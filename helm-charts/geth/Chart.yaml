@@ -13,4 +13,4 @@ name: geth
 sources:
 - https://github.com/paradeum-team/geth-charts
 type: application
-version: 0.2.7
+version: 0.2.10

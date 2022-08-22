@@ -62,6 +62,8 @@ spec:
             {{- end }}
             mkdir -p {{ .Values.volumes.data.mountPath }}/backup
             ossutil -c /data/ossutilconfig/.ossutilconfig cp -r oss://{{ .Values.import.ossutil.bucket }}/{{ .Values.import.ossutil.bakHost }}/$subPath/ {{ .Values.volumes.data.mountPath }}/backup/
+            cd {{ .Values.volumes.data.mountPath }}/backup/
+            ls *.tar.gz|grep -v "${mouth}"|xargs rm -f
           volumeMounts:
             - name: data
               mountPath: {{ .Values.volumes.data.mountPath }}
